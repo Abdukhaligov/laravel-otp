@@ -1,4 +1,4 @@
-# About Laravel OTP ▲
+# About Laravel OTP
 
 ## Reference
   
