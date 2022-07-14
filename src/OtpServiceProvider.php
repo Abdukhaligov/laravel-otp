@@ -14,13 +14,13 @@ class OtpServiceProvider extends ServiceProvider
    */
   public function register()
   {
-    $this->app->bind('otp', Otp::class);
+    $this->app->bind('otp', OtpFacade::class);
 
     /*
      * Create aliases for the dependency.
      */
     $loader = \Illuminate\Foundation\AliasLoader::getInstance();
-    $loader->alias('Otp', Otp::class);
+    $loader->alias('Otp', OtpFacade::class);
   }
 
   /**
@@ -30,7 +30,7 @@ class OtpServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+    $this->loadMigrationsFrom(__DIR__ . '/migrations');
 
     $this->commands([
       OptClean::class,

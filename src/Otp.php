@@ -1,68 +1,55 @@
 <?php
 
-namespace Abdukhaligov\LaravelOTP;
+namespace Abdukhaligov\LaravelOTP\Models;
 
-use Abdukhaligov\LaravelOTP\Models\Otp as Model;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Facade;
+use Abdukhaligov\LaravelOTP\OtpFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
-class Otp extends Facade
+/**
+ * @property string $id
+ * @property string $token
+ * @property string $clean_token Token without hashing (used only in factory)
+ * @see OtpFactory::newToken()
+ * @property bool $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ */
+class Otp extends Model
 {
+  use HasFactory;
+
   /**
-   * @return string
+   * The database table used by the model.
+   *
+   * @var string
    */
-  protected static function getFacadeAccessor(): string
+  protected $table = 'otps';
+
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'identifier', 'token', 'valid_until'
+  ];
+
+  protected $casts = [
+    'valid' => 'boolean'
+  ];
+
+  protected static function newFactory(): OtpFactory
   {
-    return 'otp';
+    return OtpFactory::new();
   }
 
-  /**
-   * Generate/save a new OTP code for the given identifier and return it.
-   *
-   * @param string $identifier The identity that will be tied to the OTP.
-   * @param int $digits The amount of digits to be generated.
-   * @param int $validity The validity period of the OTP in minutes.
-   * @return string
-   */
-  public static function generate(string $identifier, int $digits = 6, int $validity = 10): string
+  protected static function boot()
   {
-    Model::where('identifier', $identifier)->where('valid', true)->delete();
-
-    /** @var Model|Builder $otp */
-    $otp = Model::factory([
-      'identifier' => $identifier,
-      'valid_until' => Carbon::now()->addMinutes($validity),
-      'valid' => true
-    ])->newToken($digits)->make();
-
-    $otp->create(array_merge(['token' => $otp->clean_token], $otp->attributesToArray()));
-
-    return $otp->clean_token;
-  }
-
-  /**
-   * Validate an OTP code for the given identifier.
-   *
-   * @param string $identifier The identity that will be tied to the OTP.
-   * @param string $token The OTP code to be validated.
-   * @return bool
-   */
-  public static function validate(string $identifier, string $token): bool
-  {
-    $otp = Model::where('identifier', $identifier)
-      ->where('valid', true)
-      ->where('valid_until', '>', now())
-      ->first();
-
-    if ($otp == null || !$otp->valid || !Hash::check($token, $otp->token)) {
-      return false;
-    }
-
-    $otp->valid = false;
-    $otp->save();
-
-    return true;
+    parent::boot();
+    static::creating(function ($otp) {
+      $otp->token = Hash::make($otp->token);
+      unset($otp->clean_token);
+    });
   }
 }

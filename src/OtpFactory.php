@@ -1,6 +1,6 @@
 <?php
 
-namespace Abdukhaligov\LaravelOTP\Database\Factories;
+namespace Abdukhaligov\LaravelOTP;
 
 use Abdukhaligov\LaravelOTP\Models\Otp;
 use Illuminate\Database\Eloquent\Factories\Factory;

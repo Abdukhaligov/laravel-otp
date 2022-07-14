@@ -56,7 +56,7 @@ Add alias to the `config/app.php` file
 
     'aliases' => [
         ...
-        'otp' => Abdukhaligov\LaravelOtp\Otp::class,
+        'otp' => Abdukhaligov\LaravelOtp\OtpFacade::class,
     ];
 ...
 ```
