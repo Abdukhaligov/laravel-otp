@@ -28,7 +28,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Abdukhaligov\\LaravelOTP\\OTPServiceProvider"
+        "Abdukhaligov\\LaravelOTP\\OtpServiceProvider"
       ],
       "aliases": {
         "Otp": "Abdukhaligov\\LaravelOTP\\Otp"
