@@ -1,6 +1,6 @@
 <?php
 
-namespace Abdukhaligov\LaravelOTP\Facades;
+namespace Abdukhaligov\LaravelOTP;
 
 use Abdukhaligov\LaravelOTP\Models\Otp as Model;
 use Carbon\Carbon;
@@ -15,7 +15,7 @@ class Otp extends Facade
    */
   protected static function getFacadeAccessor(): string
   {
-    return 'Otp';
+    return 'otp';
   }
 
   /**

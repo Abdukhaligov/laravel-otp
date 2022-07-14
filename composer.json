@@ -25,6 +25,16 @@
       "Abdukhaligov\\LaravelOTP\\": "src"
     }
   },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Abdukhaligov\\LaravelOTP\\OTPServiceProvider"
+      ],
+      "aliases": {
+        "Otp": "Abdukhaligov\\LaravelOTP\\Otp"
+      }
+    }
+  },
   "config": {
     "optimize-autoloader": true,
     "sort-packages": true

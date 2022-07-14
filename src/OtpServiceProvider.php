@@ -3,7 +3,6 @@
 namespace Abdukhaligov\LaravelOTP;
 
 use Abdukhaligov\LaravelOTP\Commands\OptClean;
-use Abdukhaligov\LaravelOTP\Facades\Otp;
 use Illuminate\Support\ServiceProvider;
 
 class OtpServiceProvider extends ServiceProvider
@@ -16,6 +15,12 @@ class OtpServiceProvider extends ServiceProvider
   public function register()
   {
     $this->app->bind('otp', Otp::class);
+
+    /*
+     * Create aliases for the dependency.
+     */
+    $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+    $loader->alias('Otp', Otp::class);
   }
 
   /**
