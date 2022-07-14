@@ -2,7 +2,6 @@
 
 namespace Abdukhaligov\LaravelOTP;
 
-use Abdukhaligov\LaravelOTP\Models\Otp as Model;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Facade;
@@ -28,10 +27,10 @@ class OtpFacade extends Facade
    */
   public static function generate(string $identifier, int $digits = 6, int $validity = 10): string
   {
-    Model::where('identifier', $identifier)->where('valid', true)->delete();
+    Otp::where('identifier', $identifier)->where('valid', true)->delete();
 
-    /** @var Model|Builder $otp */
-    $otp = Model::factory([
+    /** @var Otp|Builder $otp */
+    $otp = Otp::factory([
       'identifier' => $identifier,
       'valid_until' => Carbon::now()->addMinutes($validity),
       'valid' => true
@@ -51,7 +50,7 @@ class OtpFacade extends Facade
    */
   public static function validate(string $identifier, string $token): bool
   {
-    $otp = Model::where('identifier', $identifier)
+    $otp = Otp::where('identifier', $identifier)
       ->where('valid', true)
       ->where('valid_until', '>', now())
       ->first();

@@ -3,7 +3,7 @@
 
 namespace Abdukhaligov\LaravelOTP\Commands;
 
-use Abdukhaligov\LaravelOTP\Models\Otp;
+use Abdukhaligov\LaravelOTP\Otp;
 use Illuminate\Console\Command;
 
 class OptClean extends Command
