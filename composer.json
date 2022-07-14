@@ -1,0 +1,34 @@
+{
+  "name": "abdukhaligov/laravel-otp",
+  "description": "The OTP package for Laravel.",
+  "keywords": [
+    "abdukhaligov",
+    "laravel-otp",
+    "laravel"
+  ],
+  "homepage": "https://github.com/Abdukhaligov/laravel-otp",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Abdukhaligov Hikmat",
+      "email": "hikmat.pou@gmail.com",
+      "homepage": "https://github.com/Abdukhaligov",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^8.0.2",
+    "laravel/framework": "^9.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Abdukhaligov\\LaravelOTP\\": "src"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
