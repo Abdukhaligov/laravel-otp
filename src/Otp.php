@@ -19,6 +19,13 @@ class Otp extends Model
   use HasFactory;
 
   /**
+   * Indicates if migrations will be run.
+   *
+   * @var bool
+   */
+  public static bool $runsMigrations = true;
+
+  /**
    * The database table used by the model.
    *
    * @var string
@@ -50,5 +57,17 @@ class Otp extends Model
       $otp->token = Hash::make($otp->token);
       unset($otp->clean_token);
     });
+  }
+
+  /**
+   * Configure to not register its migrations.
+   *
+   * @return static
+   */
+  public static function ignoreMigrations(): static
+  {
+    static::$runsMigrations = false;
+
+    return new static;
   }
 }

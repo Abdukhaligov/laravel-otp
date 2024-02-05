@@ -30,10 +30,22 @@ class OtpServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    $this->loadMigrationsFrom(__DIR__ . '/migrations');
+    if ($this->shouldMigrate()) {
+      $this->loadMigrationsFrom(__DIR__ . '/migrations');
+    }
 
     $this->commands([
       OptClean::class,
     ]);
+  }
+
+  /**
+   * Determine if we should register the migrations.
+   *
+   * @return bool
+   */
+  protected function shouldMigrate(): bool
+  {
+    return Otp::$runsMigrations;
   }
 }
