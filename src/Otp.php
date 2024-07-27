@@ -45,20 +45,6 @@ class Otp extends Model
     'valid' => 'boolean'
   ];
 
-  protected static function newFactory(): OtpFactory
-  {
-    return OtpFactory::new();
-  }
-
-  protected static function boot()
-  {
-    parent::boot();
-    static::creating(function ($otp) {
-      $otp->token = Hash::make($otp->token);
-      unset($otp->clean_token);
-    });
-  }
-
   /**
    * Configure to not register its migrations.
    *

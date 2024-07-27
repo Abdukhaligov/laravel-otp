@@ -2,7 +2,7 @@
 
 namespace Abdukhaligov\LaravelOTP;
 
-use Abdukhaligov\LaravelOTP\Commands\OptClean;
+use Abdukhaligov\LaravelOTP\Commands\OtpClean;
 use Illuminate\Support\ServiceProvider;
 
 class OtpServiceProvider extends ServiceProvider
@@ -35,7 +35,7 @@ class OtpServiceProvider extends ServiceProvider
     }
 
     $this->commands([
-      OptClean::class,
+      OtpClean::class,
     ]);
   }
 

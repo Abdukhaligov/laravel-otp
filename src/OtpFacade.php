@@ -18,7 +18,18 @@ class OtpFacade extends Facade
   }
 
   /**
-   * Generate/save a new OTP code for the given identifier and return it.
+   * Generate a random string of given length.
+   *
+   * @param int $length
+   * @return string
+   */
+  private static function generateRandomString(int $length): string
+  {
+    return substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', $length)), 0, $length);
+  }
+
+  /**
+   * Generate and save a new OTP code for the given identifier and return it.
    *
    * @param string $identifier The identity that will be tied to the OTP.
    * @param int $digits The amount of digits to be generated.
@@ -29,16 +40,16 @@ class OtpFacade extends Facade
   {
     Otp::where('identifier', $identifier)->where('valid', true)->delete();
 
-    /** @var Otp|Builder $otp */
-    $otp = Otp::factory([
+    $cleanToken = self::generateRandomString($digits);
+
+    Otp::create([
       'identifier' => $identifier,
-      'valid_until' => Carbon::now()->addMinutes($validity),
+      'valid_until' => now()->addMinutes($validity),
+      'token' => Hash::make($cleanToken),
       'valid' => true
-    ])->newToken($digits)->make();
+    ]);
 
-    $otp->create(array_merge(['token' => $otp->clean_token], $otp->attributesToArray()));
-
-    return $otp->clean_token;
+    return $cleanToken;
   }
 
   /**

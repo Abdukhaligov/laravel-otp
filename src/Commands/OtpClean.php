@@ -6,7 +6,7 @@ namespace Abdukhaligov\LaravelOTP\Commands;
 use Abdukhaligov\LaravelOTP\Otp;
 use Illuminate\Console\Command;
 
-class OptClean extends Command
+class OtpClean extends Command
 {
   /**
    * The name and signature of the console command.
