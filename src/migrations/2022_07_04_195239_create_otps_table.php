@@ -16,6 +16,7 @@ return new class extends Migration {
       $table->increments('id')->index();
       $table->string('identifier');
       $table->string('token');
+      $table->tinyInteger('attempts')->default(0);
       $table->dateTime('valid_until');
       $table->boolean('valid')->default(true);
       $table->timestamps();
