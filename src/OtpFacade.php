@@ -2,8 +2,6 @@
 
 namespace Abdukhaligov\LaravelOTP;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\Facades\Hash;
 
@@ -29,6 +27,24 @@ class OtpFacade extends Facade
     $pattern = $onlyDigits ? '0123456789' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
     return substr(str_shuffle(str_repeat($pattern, $length)), 0, $length);
+  }
+
+  /**
+   * @param string $identifier
+   * @return Otp|null
+   */
+  private static function validOtp(string $identifier): ?Otp
+  {
+    return Otp::where('identifier', $identifier)
+      ->where('valid', true)
+      ->where('attempts', '>', 0)
+      ->where('valid_until', '>', now())
+      ->first();
+  }
+
+  private static function checkOtp(Otp $otp, string $token): bool
+  {
+    return $otp->valid && Hash::check($token, $otp->token);
   }
 
   /**
@@ -67,24 +83,55 @@ class OtpFacade extends Facade
    */
   public static function validate(string $identifier, string $token): bool
   {
-    $otp = Otp::where('identifier', $identifier)
-      ->where('valid', true)
-      ->where('valid_until', '>', 0)
-      ->where('valid_until', '>', now())
-      ->first();
-
-    if ($otp !== null) {
+    if ($otp = self::validOtp($identifier)) {
       $otp->attempts = $otp->attempts - 1;
       $otp->save();
-    }
-
-    if ($otp == null || !$otp->valid || !Hash::check($token, $otp->token)) {
+    } else {
       return false;
     }
 
-    $otp->valid = false;
-    $otp->save();
+    if (!self::checkOtp($otp, $token)) {
+      return false;
+    } else {
+      $otp->valid = false;
+      $otp->save();
 
-    return true;
+      return true;
+    }
+  }
+
+  /**
+   * Need to make otp submitted, via link or something else
+   *
+   * @param string $identifier
+   * @param string $token
+   * @return bool
+   */
+  public static function submit(string $identifier, string $token): bool
+  {
+    if (!$otp = self::validOtp($identifier)) {
+      return false;
+    }
+
+    if (!self::checkOtp($otp, $token)) {
+      return false;
+    } else {
+      $otp->submitted = true;
+      $otp->save();
+
+      return true;
+    }
+  }
+
+  public static function checkSubmitted(string $identifier): bool
+  {
+    if (($otp = self::validOtp($identifier)) && $otp->submitted) {
+      $otp->valid = false;
+      $otp->save();
+
+      return true;
+    } else {
+      return false;
+    }
   }
 }

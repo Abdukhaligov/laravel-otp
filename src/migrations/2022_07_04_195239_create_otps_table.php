@@ -19,6 +19,7 @@ return new class extends Migration {
       $table->tinyInteger('attempts')->default(0);
       $table->dateTime('valid_until');
       $table->boolean('valid')->default(true);
+      $table->boolean('submitted')->default(false);
       $table->timestamps();
     });
   }
